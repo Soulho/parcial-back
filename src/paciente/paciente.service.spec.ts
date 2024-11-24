@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
 import { PacienteService } from './paciente.service';
 import { Repository } from 'typeorm';
@@ -28,7 +29,8 @@ describe('PacienteService', () => {
     for(let i = 0; i < 5; i++){
         const paciente: PacienteEntity = await repository.save({
         name: faker.person.firstName(),
-        genero: faker.person.sex()})
+        genero: faker.person.sex(),
+        diagnosticos: []})
         pacienteList.push(paciente);
     }
   }
@@ -64,6 +66,35 @@ describe('PacienteService', () => {
       medicos: []
     }
     await expect(service.create(paciente)).rejects.toHaveProperty("message", "The patient name must be 3 characters");
+  });
+
+  it('findAll should return all pacientes', async () => {
+    const pacientes: PacienteEntity[] = await service.findAll();
+    expect(pacientes).not.toBeNull();
+    expect(pacientes).toHaveLength(pacienteList.length);
+  });
+
+  it('findOne should return a paciente by id', async () => {
+    const storedPaciente: PacienteEntity = pacienteList[0];
+    const paciente: PacienteEntity = await service.findOne(storedPaciente.id);
+    expect(paciente).not.toBeNull();
+    expect(storedPaciente.name).toEqual(storedPaciente.name)
+    expect(storedPaciente.genero).toEqual(storedPaciente.genero)
+  });
+
+  it('findOne should throw an exception for an invalid paciente', async () => {
+    await expect(() => service.findOne("0")).rejects.toHaveProperty("message", "The paciente with the given id was not found")
+  });
+
+  it('delete should remove a paciente', async () => {
+    const paciente: PacienteEntity = pacienteList[0];
+    await service.delete(paciente.id);
+    const deletedPaciente: PacienteEntity = await repository.findOne({ where: { id: paciente.id } })
+    expect(deletedPaciente).toBeNull();
+  });
+
+  it('delete should throw an exception for an invalid paciente', async () => {
+    await expect(() => service.delete("0")).rejects.toHaveProperty("message", "The paciente with the given id was not found")
   });
 
 }); 

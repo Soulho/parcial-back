@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { MedicoEntity } from "../medico/medico.entity";
 import { DiagnosticoEntity } from "../diagnostico/diagnostico.entity";
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";

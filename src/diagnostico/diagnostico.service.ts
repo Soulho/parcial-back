@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { BadRequestException, BusinessError, BusinessLogicException } from '../shared/business-errors';

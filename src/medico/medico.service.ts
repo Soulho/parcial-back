@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MedicoEntity } from './medico.entity';
@@ -40,10 +41,12 @@ export class MedicoService {
           throw new BusinessLogicException("The medico with the given id was not found", BusinessError.NOT_FOUND);
 
         const pacientes = medico.pacientes;
-        
-        if(pacientes.length === 0){
-            throw new BadRequestException("The medico has patients", BusinessError.BAD_REQUEST);
+        if (pacientes){
+            if(pacientes.length === 0){
+                throw new BadRequestException("The medico has patients", BusinessError.BAD_REQUEST);
+            }
         }
+        
         await this.medicoRepository.remove(medico);
     }
 
